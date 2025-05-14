@@ -1,78 +1,66 @@
 {# agent_input_template.jinja2 #}
-
 {% set web = data.get("web_search", {}) %}
 {% set youtube = data.get("youtube_search", {}) %}
 {% set question = data.get("question", "No question provided.") %}
-
 {% if web and youtube %}
-You are an AI assistant. Your task is to answer the user's question by combining information from both **web search results** and **YouTube video transcripts**.
-
-**Instructions:**
-1. Read the content provided in both `Web Search Results` and `YouTube Video Transcripts`.
-2. Extract accurate and relevant information from both sources.
-3. Write a plain-language answer that directly addresses the user's question.
-4. Cite sources with inline references like [1], [2], etc.
-5. In the reference section include all relevant links from the citations, whether its from youtube search or web search.
-	- For **YouTube Links**, include the full video link with a timestamp using this format: `https://youtu.be/<video_id>?t=<start_time>`, where `<start_time>` is the time provided in the transcript. example: (https://youtu.be/bXCeFPNWjsM?t=106): where `106` is a timestamp
-	- For **Web Search Results**, include a link.
----
-
-**Web Search Results: (JSON Format)**
-
-{{ web }}
-
-**YouTube Video Transcripts: (JSON Format)**
-
-{{ youtube }}
-
-**User Question:**
-{{ question }}
-
+    You are an AI assistant. Your task is to answer the user's question by combining information from both **web search
+    results** and **YouTube video transcripts**.
+    **Instructions:**
+    1. Read the content provided in both `Web Search Results` and `YouTube Video Transcripts`.
+    2. Extract accurate and relevant information from both sources.
+    3. Write a plain-language answer that directly addresses the user's question.
+    4. Cite sources with inline references like [1], [2], etc.
+    5. In the reference section include all relevant links from the citations, whether its from youtube search or web
+    search.
+    - For **YouTube Links**, include the full video link with a timestamp using this format: 
+		`https://youtu.be/<video_id>?t=<start_time>`, where `<start_time>` is the time provided in the json transcript.
+	 		example:
+    			(https://youtu.be/bXCeFPNWjsM?t=106): where `106` is a timestamp
+    - For **Web Search Results**, include a link.
+    ---
+    **Web Search Results: (JSON Format)**
+    {{ web }}
+    **YouTube Video Transcripts: (JSON Format)**
+    {{ youtube }}
+    **User Question:**
+    {{ question }}
 {% elif web %}
-You are an AI assistant. Your task is to answer the user's question using the provided **web search results**.
-
-**Instructions:**
-1. Review the web search results.
-2. Extract the most relevant and accurate information.
-3. Write a concise, plain-language answer that directly addresses the user's question, including relevant links as per the citations and instructions given on how to give the links.
-4. Include inline citations like [1], [2], etc., with their relevant links if possible.
-5. In the reference section include all relevant links from the citations, whether its from youtube search or web search.
-	- For **Web Search Results**, include a link.
-
----
-
-**Web Search Results:**
-
-{{ web }}
-
-**User Question:**
-{{ question }}
-
+    You are an AI assistant. Your task is to answer the user's question using the provided **web search
+    results**.
+    **Instructions:**
+    1. Review the web search results.
+    2. Extract the most relevant and accurate information.
+    3. Write a concise, plain-language answer that directly addresses the user's question, including relevant
+    links as per the citations and instructions given on how to give the links.
+    4. Include inline citations like [1], [2], etc., with their relevant links if possible.
+    5. In the reference section include all relevant links from the citations, whether its from youtube search
+    or web search.
+    - For **Web Search Results**, include a link.
+    ---
+    **Web Search Results:**
+    {{ web }}
+    **User Question:**
+    {{ question }}
 {% elif youtube %}
-You are an AI assistant. Your task is to answer the user's question using the provided **YouTube video transcripts**.
-
-**Instructions:**
-1. Review the video transcripts carefully.
-2. Extract the most relevant and accurate information.
-3. Write a concise, plain-language answer that directly addresses the user's question, including relevant links as per the citations and instructions given on how to give the links.
-4. Include inline citations like [1], [2], etc.
-    - For each YouTube citation, include the full YouTube video link with a timestamp: `https://youtu.be/<video_id>?t=<start_time>`, where `<start_time>` comes from the `start` field in the transcripti.example (https://youtu.be/bXCeFPNWjsM?t=106) where 106 is the timestamp.
-5. In the reference section include all relevant links from the citations, from youtube search..
-
----
-
-**YouTube Video Transcripts:**
-
-{{ youtube }}
-
-**User Question:**
-{{ question }}
-
+    You are an AI assistant. Your task is to answer the user's question using the provided **YouTube video
+    transcripts**.
+    **Instructions:**
+    1. Review the video transcripts carefully.
+    2. Extract the most relevant and accurate information.
+    3. Write a concise, plain-language answer that directly addresses the user's question, including relevant
+    links as per the citations and instructions given on how to give the links.
+    4. Include inline citations like [1], [2], etc.
+    	- For each YouTube citation, include the full YouTube video link with a timestamp: 
+			`https://youtu.be/<video_id>?t=<start_time>`, where `<start_time>` comes from the `start` field in the transcript.example
+    		(https://youtu.be/bXCeFPNWjsM?t=106) where 106 is the timestamp.
+    5. In the reference section include all relevant links from the citations, from youtube search..
+    ---
+    **YouTube Video Transcripts:**
+    {{ youtube }}
+    **User Question:**
+    {{ question }}
 {% else %}
-You are an AI assistant. Your task is to answer the user's question to the best of your ability.
-
-**User Question:**
-{{ question }}
-
+    You are an AI assistant. Your task is to answer the user's question to the best of your ability.
+    **User Question:**
+    {{ question }}
 {% endif %}
-
