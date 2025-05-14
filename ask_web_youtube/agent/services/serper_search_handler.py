@@ -1,11 +1,13 @@
 """serper search handler module.
+
 This module provides a class to handle search queries using the Serper API.
 """
 
-import logging
-import requests
+import httpx
 from typing import Any, Dict, Optional
 import os
+
+from utils.log_config import setup_logger
 
 
 class SerperSearchHandler:
@@ -22,12 +24,11 @@ class SerperSearchHandler:
 
     def __init__(self, api_key: Optional[str] = None) -> None:
         """
-        Initializes the SerperSearchHandler with the base API URL and API key.
+        Initialize the SerperSearchHandler with the base API URL and API key.
 
         Args:
             api_key (Optional[str]): The API key for the Serper API. If not provided, it will be fetched from the environment variable 'SERPER_API_KEY'.
         """
-
         self.base_url = "https://google.serper.dev/search"
         self.api_key = api_key or os.getenv("SERPER_API_KEY")
         if not self.api_key:
@@ -35,23 +36,17 @@ class SerperSearchHandler:
                 "API key must be provided either as an argument or via the 'SERPER_API_KEY' environment variable."
             )
 
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
-        handler = logging.StreamHandler()
-        handler.setFormatter(
-            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        )
-        self.logger.addHandler(handler)
+        self.logger = setup_logger(__name__)
 
-    def search(self, query: str) -> Optional[Dict[str, Any]]:
+    def search(self, query: str, max_pages: int = 3) -> list:
         """
-        Performs a search query using the Serper API.
+        Perform a search query using the Serper API.
 
         Args:
             query (str): The search query string.
 
         Returns:
-            Optional[Dict[str, Any]]: The search results as a dictionary if successful, None otherwise.
+            list: A list of search results.
 
         Raises:
             ValueError: If the query is empty or invalid.
@@ -64,20 +59,29 @@ class SerperSearchHandler:
             "X-API-KEY": self.api_key,
             "Content-Type": "application/json",
         }
-        payload = {"q": query}
+        payload = {
+            "q": query,
+        }
 
-        try:
-            self.logger.debug(f"Sending request to Serper API: {self.base_url}")
-            response = requests.post(
-                self.base_url, headers=headers, json=payload, timeout=10
-            )
-            response.raise_for_status()
-            self.logger.debug("Request successful, parsing response.")
-            return response.json()
-        except requests.exceptions.Timeout:
-            self.logger.error("The request timed out.")
-        except requests.exceptions.RequestException as e:
-            self.logger.error(f"An error occurred while making the request: {e}")
-        except ValueError as e:
-            self.logger.error(f"Error parsing response: {e}")
-        return None
+        results = []
+        for page in range(1, max_pages + 1):
+            payload["page"] = str(page)
+            try:
+                self.logger.debug(f"Sending request to Serper API: {self.base_url}")
+                with httpx.Client() as client:
+                    response = client.post(
+                        self.base_url, headers=headers, json=payload, timeout=10
+                    )
+                response.raise_for_status()
+                self.logger.debug("Request successful, parsing response.")
+                return response.json()
+            except httpx.TimeoutException:
+                self.logger.error("The request timed out.")
+            except httpx.RequestError as e:
+                self.logger.error(f"An error occurred while making the request: {e}")
+            except ValueError as e:
+                self.logger.error(f"Error parsing response: {e}")
+            except Exception as e:
+                self.logger.error(f"An unexpected error occurred: {e}")
+
+        return results

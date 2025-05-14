@@ -1,12 +1,15 @@
-from agent.services.serper_search_handler import SerperSearchHandler
-from agent.services.youtube_handler import YouTubeHandler
-from agent.services.llm_handler.groq_handler import GroqHandler
-from jinja2 import Environment, FileSystemLoader
-
 """Agent module.
 
 This module defines an Agent class that utilizes various services to perform tasks.
 """
+
+from jinja2 import Environment, FileSystemLoader
+from typing import Dict
+
+from agent.services.serper_search_handler import SerperSearchHandler
+from agent.services.youtube_handler import YouTubeHandler
+from agent.services.llm_handler.groq_handler import GroqHandler
+from utils.log_config import setup_logger
 
 
 class Agent:
@@ -21,13 +24,13 @@ class Agent:
     def __init__(
         self, template_path="agent/templates/agent_input_template.jinja2"
     ) -> None:
-        """
-        Initializes the Agent with its service handlers.
-        """
+        """Initialize the Agent with its service handlers."""
         self.template_path = template_path
         self.serper_handler = SerperSearchHandler()
         self.youtube_handler = YouTubeHandler()
         self.llm_handler = GroqHandler()
+        self.logger = setup_logger(__name__)
+        self.logger.info("Agent initialized with template path: %s", self.template_path)
 
     def generate_from_template(self, data: dict) -> str:
         """
@@ -40,7 +43,7 @@ class Agent:
         Returns:
             str: The rendered template content.
         """
-
+        self.logger.info("Generating content from template with data: %s", data)
         # Extract the directory and template file name from self.template_path
         template_dir, template_file = self.template_path.rsplit("/", 1)
 
@@ -52,12 +55,11 @@ class Agent:
 
         # Render the template with the provided data
         response = template.render({"data": data})
-        print(f"Response: {response}")
         return response
 
     def process_request(
         self, input_text: str, enable_web: bool = True, enable_youtube: bool = False
-    ) -> str:
+    ) -> Dict[str, str]:
         """
         Process input text using the language model.
 
@@ -72,12 +74,16 @@ class Agent:
         if enable_web:
             # Perform a web search using Serper
             search_results = self.serper_handler.search(input_text)
-            data["web_search"] = search_results
+            import json
+
+            data["web_search"] = json.dumps(search_results)
 
         if enable_youtube:
             # Perform a YouTube search
             youtube_results = self.youtube_handler.fetch_videos(input_text)
-            data["youtube_search"] = youtube_results
+            import json
+
+            data["youtube_search"] = json.dumps(youtube_results)
 
         input = self.generate_from_template(data)
         # Process the input text using the language model

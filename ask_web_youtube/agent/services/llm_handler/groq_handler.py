@@ -1,10 +1,11 @@
 """GroqHandler class for interacting with Groq's API using a third-party package."""
 
-import logging
 from typing import Any, Dict, Optional
 from groq import Groq
 import httpx
 import os
+
+from utils.log_config import setup_logger
 
 
 class GroqHandler:
@@ -26,7 +27,6 @@ class GroqHandler:
             api_key (Optional[str]): The API key for Groq. If not provided, it will be fetched from the environment variable `GROQ_API_KEY`.
             model (Optional[str]): The model to use (e.g., "llama3-8b-8192").
         """
-
         self.api_key = api_key or os.getenv("GROQ_API_KEY")
         if not self.api_key:
             raise ValueError(
@@ -34,8 +34,7 @@ class GroqHandler:
             )
 
         self.model = model
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
+        self.logger = setup_logger(__name__)
         self.client = Groq(api_key=self.api_key)
 
     def query(
@@ -54,7 +53,7 @@ class GroqHandler:
         Returns:
             Dict[str, Any]: The response from the Groq API.
         """
-        kwargs = dict(
+        kwargs: Dict[str, Any] = dict(
             messages=messages,
             timeout=timeout,
         )

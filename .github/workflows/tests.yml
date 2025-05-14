@@ -1,4 +1,4 @@
-name: Code Quality
+name: Run Pytest Tests
 
 on:
   push:
@@ -7,12 +7,11 @@ on:
   pull_request:
 
 jobs:
-  code-quality:
-    name: Run Code Quality Checks
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -20,15 +19,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff pycodestyle
+          pip install pytest
 
-      - name: Run Ruff
+      - name: Run tests
         working-directory: ask_web_youtube
-        run: make ruff
-
-      - name: Run Pycodestyle
-        working-directory: ask_web_youtube
-        run: make docs
+        run: make tests
