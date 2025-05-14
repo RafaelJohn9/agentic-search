@@ -109,4 +109,4 @@ make tests
 
 ## Demo
 
-<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/5fc635bf677540ab9cb675148a11945f?sid=12c297cc-ad29-4aa7-a6b5-19471643adaa" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+[![Watch the demo](https://cdn.loom.com/sessions/thumbnails/5fc635bf677540ab9cb675148a11945f-with-play.gif)](https://www.loom.com/share/5fc635bf677540ab9cb675148a11945f)
