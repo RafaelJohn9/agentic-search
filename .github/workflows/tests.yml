@@ -9,12 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: >-
-      ${{ 
-        secrets.YOUTUBE_DATA_API_KEY != '' &&
-        secrets.SERPER_API_KEY != '' &&
-        secrets.GROQ_API_KEY != ''
-      }}
+    if: ${{ secrets.YOUTUBE_DATA_API_KEY != '' && secrets.SERPER_API_KEY != '' && secrets.GROQ_API_KEY != '' }}
 
     steps:
       - name: Checkout code
