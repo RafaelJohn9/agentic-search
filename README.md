@@ -109,4 +109,4 @@ make tests
 
 ## Demo
 
-[![Watch the demo](https://cdn.loom.com/sessions/thumbnails/5fc635bf677540ab9cb675148a11945f-with-play.gif)](https://www.loom.com/share/5fc635bf677540ab9cb675148a11945f)
+[Watch the demo](https://www.loom.com/share/5fc635bf677540ab9cb675148a11945f)
