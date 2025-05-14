@@ -1,3 +1,9 @@
+"""Unit tests for the GroqHandler class.
+
+This module tests the functionality of the GroqHandler
+without mocking, ensuring that credentials are working as expected.
+"""
+
 import pytest
 from agent.services.llm_handler.groq_handler import GroqHandler
 import os

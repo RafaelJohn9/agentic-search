@@ -25,6 +25,12 @@ jobs:
           pip install -r ask_web_youtube/requirements.txt
           pip install pytest
 
+      - name: Set environment variables from secrets
+        run: |
+          echo "YOUTUBE_DATA_API_KEY=${{ secrets.YOUTUBE_DATA_API_KEY }}" >> $GITHUB_ENV
+          echo "SERPER_API_KEY=${{ secrets.SERPER_API_KEY }}" >> $GITHUB_ENV
+          echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" >> $GITHUB_ENV
+
       - name: Run tests
         working-directory: ask_web_youtube
         run: make tests

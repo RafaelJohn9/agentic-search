@@ -4,7 +4,7 @@ This module provides a class to handle search queries using the Serper API.
 """
 
 import httpx
-from typing import Any, Dict, Optional
+from typing import Optional
 import os
 
 from utils.log_config import setup_logger
